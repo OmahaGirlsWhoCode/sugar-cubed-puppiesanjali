@@ -16,7 +16,20 @@ function preload() {
 }
 var player1;
 
+function restart() {
+    clear();
+    preload();
+    create();
+    begin();
+}
+
+function begin() {
+    game.paused = false
+    game.input.keyboard.removeKey(32);
+}
+
 function clear() {
+    console.log('clicked button');
     toybox.clear();
 }
 
@@ -31,7 +44,7 @@ function create() {
         scale: 1
     };
     player1 = toybox.add.alien(playerOptions);
-    
+
     playerScore = toybox.add.text(5,5,"SCORE: " + player1.score,{ font: "14px Arial", fill: "#fff"});
     playerHealth = toybox.add.text(5,20,"LIVES: " + player1.health,{ font: "14px Arial", fill: "#fff"});
     game.time.events.loop(2000, createEnemies,this);
@@ -239,16 +252,18 @@ spring2 = toybox.add.spring(springOptions2);
 
 function update(){
     toybox.update();
-    
+
     playerScore.setText("SCORE: "+ player1.score);
     playerHealth.setText("LIVES: "+ player1.health);
 
-    // if (player1.health === 0 && !game.paused) {
-    //     playerHealth.setText("DEAD");
-    //     game.paused = true;
-    //     gameOverText = toybox.add.text(300,200,"Game Over",{ font: "64px Arial", fill: "#fff"});
-    //     newGameButton = game.add.button(340, 200, null, clear, this);
-    // }
+    if (player1.health === 0 && !game.paused) {
+        playerHealth.setText("DEAD");
+        game.paused = true;
+        gameOverText = toybox.add.text(165,120,"Game Over",{ font: "64px Arial", fill: "red"});
+        toybox.add.text(235,190,"Press space to play again",{ font: "16px Arial", fill: "red"});
+        spacebar = game.input.keyboard.addKey(32);
+        spacebar.onDown.add(restart, this)
+    }
 }
 
 function createEnemies(){
