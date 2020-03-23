@@ -20,9 +20,36 @@ var player1;
 
 function create() {
     toybox.create();
-    createbackground ()
-    createGameobjects ()
+    menu ()
 }
+
+var menutext;
+var menutext2;
+var displaydirectionstext;
+var displaydirectionstitletext;
+
+function menu () {
+    createbackground ()
+    game.paused = true;
+    menutext = toybox.add.text(105,70,"THE HOPPING ALIEN AND SLIPPERY SLIMES",{ font: "80px Impact", fill: "black", align: "center", wordWrap: true, wordWrapWidth: 500 })
+    menutext2 = toybox.add.text(165,455,"Press D for directions or Enter to play",{ font: "20px Comic Sans", fill: "white", align: "center", wordWrap: true, wordWrapWidth: 500 })
+    game.input.keyboard.removeKey(68)
+    game.input.keyboard.removeKey(13)
+    letterD = game.input.keyboard.addKey(68)
+    letterEnter = game.input.keyboard.addKey(13)
+    letterD.onDown.add(displaydirectionsstart, this);
+    letterEnter.onDown.add(createGameobjects, this);
+}
+
+function displaydirectionsstart () {
+    menutext.destroy ()
+    menutext2.destroy ()
+    game.paused = true;
+    displaydirectionstitletext = toybox.add.text(210,10,"DIRECTIONS",{ font: "40px Impact", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
+    displaydirectionstext = toybox.add.text(55,70,"Your goal is to kill as many of those slippery slimes as possible! In order to do so, jump on top of them using the up arrow. But be careful. You only have three lives. One life if lost everytime a slippery slime touches you. Press Enter to play or D to see the directions again. Good luck!",{ font: "15px Comic Sans", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
+
+}
+
 
 function createbackground () {
 var springBackdrop = {preset: "spring"};
@@ -30,6 +57,15 @@ var springBackdrop = {preset: "spring"};
 }
 
 function createGameobjects () {
+    if (menutext) {
+        menutext.destroy ()
+        menutext2.destroy ()
+    }
+
+    if (displaydirectionstext) {
+        displaydirectionstext.destroy ()
+        displaydirectionstitletext.destroy ()
+    }
     var playerOptions = {
         startingX : 100,
         startingY: 100,
@@ -101,24 +137,24 @@ function createGameobjects () {
         //text += "The number is " + i + "<br>";
     }
 
-var springOptions = {
-startingX:200,
-startingY:240,
-immovable:true,
-allowGravity:false
-};
+    var springOptions = {
+    startingX:200,
+    startingY:240,
+    immovable:true,
+    allowGravity:false
+    };
 
-spring = toybox.add.spring(springOptions);
+    spring = toybox.add.spring(springOptions);
 
-var springOptions2 = {
-startingX:440,
-startingY:240,
-immovable:true,
-allowGravity:false
-};
+    var springOptions2 = {
+    startingX:440,
+    startingY:240,
+    immovable:true,
+    allowGravity:false
+    };
 
-spring2 = toybox.add.spring(springOptions2);
-
+    spring2 = toybox.add.spring(springOptions2);
+    game.paused = false;
 }
 
 
@@ -146,16 +182,17 @@ var playerRestart;
 function displaydirections () {
     playerGameover.destroy ()
     playerRestart.destroy ()
-    displaydirectionstext = toybox.add.text(85,300,"Your goal is to kill as many of those slippery slimes as possible! In order to do so, jump on top of them using the space bar. But be careful. You only have three lives.",{ font: "20px Arial", fill: "black", wordWrap: true, wordWrapWidth: 500 })
+    displaydirectionstitletext = toybox.add.text(210,10,"DIRECTIONS",{ font: "40px Impact", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
+    displaydirectionstext = toybox.add.text(55,70,"Your goal is to kill as many of those slippery slimes as possible! In order to do so, jump on top of them using the up arrow. But be careful. You only have three lives. One life if lost everytime a slippery slime touches you. Press Enter to play or D to see the directions again. Good luck!",{ font: "15px Comic Sans", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
+    game.input.keyboard.removeKey(68)
 }
 
 function restart () {
     toybox.clear()
     preload ()
-    create ()
-    game.paused = false;
-    game.input.keyboard.removeKey(68)
-    game.input.keyboard.removeKey(13)
+    toybox.create();
+    createbackground ()
+    createGameobjects ()
 }
 
 
