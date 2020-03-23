@@ -20,7 +20,16 @@ var player1;
 
 function create() {
     toybox.create();
+    createbackground ()
+    createGameobjects ()
+}
 
+function createbackground () {
+var springBackdrop = {preset: "spring"};
+    toybox.add.backdrop(springBackdrop);
+}
+
+function createGameobjects () {
     var playerOptions = {
         startingX : 100,
         startingY: 100,
@@ -35,14 +44,12 @@ function create() {
     game.time.events.loop(2000, createEnemies,this);
     
     createEnemies();
-    var springBackdrop = {preset: "spring"};
-    toybox.add.backdrop(springBackdrop);
 
- var platformOptions = {
-  startingX: 530,
-  startingY: 430,
-    width: 200,
-    height: 16
+    var platformOptions = {
+        startingX: 530,
+        startingY: 430,
+        width: 200,
+        height: 16
     };
     
     var platformOptions2 = {
@@ -80,140 +87,19 @@ function create() {
     height: 16
     };
     
-var platformGO = toybox.add.platform(platformOptions);
-var platformGO = toybox.add.platform(platformOptions2);
-var platformGO = toybox.add.platform(platformOptions3);
-var platformGO = toybox.add.platform(platformOptions4);
-var platformGO = toybox.add.platform(platformOptions5);
-var platformGO = toybox.add.platform(platformOptions6);
+    [platformOptions,platformOptions2, platformOptions3, platformOptions4, platformOptions5, platformOptions6].forEach(po => toybox.add.platform(po))
 
-var spikesOptions = {
-startingX:400,
-startingY:640,
-scale:1
-};
+    var defaultspikeOptions = {
+        startingY: 640,
+        scale:1,
+        color: "pink"
+    }
 
-var spikesOptions2 = {
-startingX:380,
-startingY:640,
-scale:1
-};
-
-var spikesOptions3 = {
-startingX:360,
-startingY:640,
-scale:1
-};
-
-var spikesOptions4 = {
-startingX:340,
-startingY:640,
-scale:1
-};
-
-var spikesOptions5 = {
-startingX:320,
-startingY:640,
-scale:1
-};
-
-var spikesOptions6 = {
-startingX:300,
-startingY:640,
-scale:1
-};
-
-var spikesOptions7 = {
-startingX:280,
-startingY:640,
-scale:1
-};
-
-var spikesOptions8 = {
-startingX:260,
-startingY:640,
-scale:1
-};
-
-var spikesOptions9 = {
-startingX:240,
-startingY:640,
-scale:1
-};
-
-var spikesOptions10= {
-startingX:220,
-startingY:640,
-scale:1
-};
-
-var spikesOptions11= {
-startingX:420,
-startingY:640,
-scale:1
-};
-
-var spikesOptions12= {
-startingX:200,
-startingY:640,
-scale:1
-};
-
-var spikesOptions13= {
-startingX:200,
-startingY:640,
-scale:1
-};
-
-var spikesOptions14= {
-startingX:180,
-startingY:640,
-scale:1
-};
-
-var spikesOptions15= {
-startingX:160,
-startingY:640,
-scale:1
-};
-
-var spikesOptions16= {
-startingX:440,
-startingY:640,
-scale:1
-};
-
-var spikesOptions17= {
-startingX:460,
-startingY:640,
-scale:1
-};
-
-var spikesOptions18= {
-startingX:480,
-startingY:640,
-scale:1
-};
-
-var spikes = toybox.add.spikes(spikesOptions);
-var spikes = toybox.add.spikes(spikesOptions2);
-var spikes = toybox.add.spikes(spikesOptions3);
-var spikes = toybox.add.spikes(spikesOptions4);
-var spikes = toybox.add.spikes(spikesOptions5);
-var spikes = toybox.add.spikes(spikesOptions5);
-var spikes = toybox.add.spikes(spikesOptions6);
-var spikes = toybox.add.spikes(spikesOptions7);
-var spikes = toybox.add.spikes(spikesOptions8);
-var spikes = toybox.add.spikes(spikesOptions9);
-var spikes = toybox.add.spikes(spikesOptions10);
-var spikes = toybox.add.spikes(spikesOptions11);
-var spikes = toybox.add.spikes(spikesOptions12);
-var spikes = toybox.add.spikes(spikesOptions13);
-var spikes = toybox.add.spikes(spikesOptions14);
-var spikes = toybox.add.spikes(spikesOptions15);
-var spikes = toybox.add.spikes(spikesOptions16);
-var spikes = toybox.add.spikes(spikesOptions17);
-var spikes = toybox.add.spikes(spikesOptions18);
+    for (i = 0; i < 18; i++) {
+        const spikesOptions = Object.assign({startingX:480 - 20*i}, defaultspikeOptions);
+        toybox.add.spikes(spikesOptions)
+        //text += "The number is " + i + "<br>";
+    }
 
 var springOptions = {
 startingX:200,
@@ -234,6 +120,8 @@ allowGravity:false
 spring2 = toybox.add.spring(springOptions2);
 
 }
+
+
 
 function update(){
     toybox.update();
@@ -269,6 +157,7 @@ function restart () {
     game.input.keyboard.removeKey(68)
     game.input.keyboard.removeKey(13)
 }
+
 
 function createEnemies(){
     console.log("create enemies");
