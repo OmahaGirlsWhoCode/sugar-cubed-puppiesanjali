@@ -3,7 +3,9 @@ var game = new Phaser.Game(640, 480, Phaser.AUTO, '', {
     create: create,
     update: update
 });
+
 var toybox;
+
 var settings = {
     gravity: 980,
     demoMode: true,
@@ -14,9 +16,8 @@ function preload() {
     toybox = new Toybox(game,settings);
     toybox.preload();
 }
+
 var player1;
-
-
 
 function create() {
     toybox.create();
@@ -45,11 +46,11 @@ function displaydirectionsstart () {
     menutext.destroy ()
     menutext2.destroy ()
     game.paused = true;
+    game.input.keyboard.removeKey(68)
     displaydirectionstitletext = toybox.add.text(210,10,"DIRECTIONS",{ font: "40px Impact", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
-    displaydirectionstext = toybox.add.text(55,70,"Your goal is to kill as many of those slippery slimes as possible! In order to do so, jump on top of them using the up arrow. But be careful. You only have three lives. One life if lost everytime a slippery slime touches you. Press Enter to play or D to see the directions again. Good luck!",{ font: "15px Comic Sans", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
+    displaydirectionstext = toybox.add.text(55,70,"Your goal is to kill as many of those slippery slimes as possible! In order to do so, jump on top of them using the up arrow. But be careful. You only have three lives. Remember that one life if lost everytime a slippery slime touches you. Press Enter to play, or press D to see the directions again. Good luck!",{ font: "15px Comic Sans", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
 
 }
-
 
 function createbackground () {
 var springBackdrop = {preset: "spring"};
@@ -57,6 +58,9 @@ var springBackdrop = {preset: "spring"};
 }
 
 function createGameobjects () {
+    game.input.keyboard.removeKey(13)
+    game.input.keyboard.removeKey(68)
+
     if (menutext) {
         menutext.destroy ()
         menutext2.destroy ()
@@ -73,11 +77,14 @@ function createGameobjects () {
         speed: 100,
         scale: 1
     };
+
     player1 = toybox.add.alien(playerOptions);
     
     playerScore = toybox.add.text(5,5,"SCORE: " + player1.score,{ font: "14px Arial", fill: "#fff"});
     playerLives = toybox.add.text(5,20,"NUMBER OF LIVES: " + player1.health,{ font: "14px Arial", fill: "#fff"});
     game.time.events.loop(2000, createEnemies,this);
+
+
     
     createEnemies();
 
@@ -166,33 +173,44 @@ function update(){
     playerLives.setText("NUMBER OF LIVES: "+ player1.health);
 
     if (player1.health === 0 && game.paused === false) {
-        game.paused = true;
         playerGameover = toybox.add.text(9,200,"GAME OVER",{ font: "100px Arial", fill: "black"});
-        playerRestart = toybox.add.text(85,300,"Press D for directions or Enter to restart the game",{ font: "20px Arial", fill: "white" })
+        playerRestartwords = toybox.add.text(95,300,"Press D for directions or Enter to restart the game",{ font: "20px Arial", fill: "white" })
         letterD = game.input.keyboard.addKey(68)
         letterEnter = game.input.keyboard.addKey(13)
         letterD.onDown.add(displaydirections, this);
         letterEnter.onDown.add(restart, this);
+        game.time.events.add(3100, pauseGame,this);
+
     }
 }
 
+function pauseGame () {
+    game.paused = true;
+}
+
 var playerGameover;
-var playerRestart;
+var playerRestartwords;
 
 function displaydirections () {
+    playerRestartwords.destroy ()
     playerGameover.destroy ()
-    playerRestart.destroy ()
+    cleanGameobjects ()
+    console.log ("hello")
     displaydirectionstitletext = toybox.add.text(210,10,"DIRECTIONS",{ font: "40px Impact", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
-    displaydirectionstext = toybox.add.text(55,70,"Your goal is to kill as many of those slippery slimes as possible! In order to do so, jump on top of them using the up arrow. But be careful. You only have three lives. One life if lost everytime a slippery slime touches you. Press Enter to play or D to see the directions again. Good luck!",{ font: "15px Comic Sans", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
+    displaydirectionstext = toybox.add.text(55,70,"Your goal is to kill as many of those slippery slimes as possible! In order to do so, jump on top of them using the up arrow. But be careful. You only have three lives. Remember that one life if lost everytime a slippery slime touches you. Press Enter to play, or press D to see the directions again. Good luck!",{ font: "15px Comic Sans", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
     game.input.keyboard.removeKey(68)
 }
 
 function restart () {
-    toybox.clear()
+    cleanGameobjects ()
+    createGameobjects ()
+}
+
+function cleanGameobjects () {
+    toybox.clear ()
     preload ()
     toybox.create();
     createbackground ()
-    createGameobjects ()
 }
 
 
