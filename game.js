@@ -3,7 +3,9 @@ var game = new Phaser.Game(640, 480, Phaser.AUTO, '', {
     create: create,
     update: update
 });
+
 var toybox;
+
 var settings = {
     gravity: 980,
     demoMode: true,
@@ -14,13 +16,60 @@ function preload() {
     toybox = new Toybox(game,settings);
     toybox.preload();
 }
+
 var player1;
-
-
 
 function create() {
     toybox.create();
+    menu ()
+}
 
+var menutext;
+var menutext2;
+var displaydirectionstext;
+var displaydirectionstitletext;
+
+function menu () {
+    createbackground ()
+    game.paused = true;
+    menutext = toybox.add.text(105,70,"THE HOPPING ALIEN AND SLIPPERY SLIMES",{ font: "80px Impact", fill: "black", align: "center", wordWrap: true, wordWrapWidth: 500 })
+    menutext2 = toybox.add.text(165,455,"Press D for directions or Enter to play",{ font: "20px Comic Sans", fill: "white", align: "center", wordWrap: true, wordWrapWidth: 500 })
+    game.input.keyboard.removeKey(68)
+    game.input.keyboard.removeKey(13)
+    letterD = game.input.keyboard.addKey(68)
+    letterEnter = game.input.keyboard.addKey(13)
+    letterD.onDown.add(displaydirectionsstart, this);
+    letterEnter.onDown.add(createGameobjects, this);
+}
+
+function displaydirectionsstart () {
+    menutext.destroy ()
+    menutext2.destroy ()
+    game.paused = true;
+    game.input.keyboard.removeKey(68)
+    displaydirectionstitletext = toybox.add.text(210,10,"DIRECTIONS",{ font: "40px Impact", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
+    displaydirectionstext = toybox.add.text(55,70,"Your goal is to kill as many of those slippery slimes as possible! In order to do so, jump on top of them using the up arrow. But be careful. You only have three lives. Remember that one life if lost everytime a slippery slime touches you. Press Enter to play, or press D to see the directions again. Good luck!",{ font: "15px Comic Sans", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
+
+}
+
+function createbackground () {
+var springBackdrop = {preset: "spring"};
+    toybox.add.backdrop(springBackdrop);
+}
+
+function createGameobjects () {
+    game.input.keyboard.removeKey(13)
+    game.input.keyboard.removeKey(68)
+
+    if (menutext) {
+        menutext.destroy ()
+        menutext2.destroy ()
+    }
+
+    if (displaydirectionstext) {
+        displaydirectionstext.destroy ()
+        displaydirectionstitletext.destroy ()
+    }
     var playerOptions = {
         startingX : 100,
         startingY: 100,
@@ -28,20 +77,22 @@ function create() {
         speed: 100,
         scale: 1
     };
+
     player1 = toybox.add.alien(playerOptions);
     
     playerScore = toybox.add.text(5,5,"SCORE: " + player1.score,{ font: "14px Arial", fill: "#fff"});
+    playerLives = toybox.add.text(5,20,"NUMBER OF LIVES: " + player1.health,{ font: "14px Arial", fill: "#fff"});
     game.time.events.loop(2000, createEnemies,this);
+
+
     
     createEnemies();
-    var springBackdrop = {preset: "spring"};
-    toybox.add.backdrop(springBackdrop);
 
- var platformOptions = {
-  startingX: 530,
-  startingY: 430,
-    width: 200,
-    height: 16
+    var platformOptions = {
+        startingX: 530,
+        startingY: 430,
+        width: 200,
+        height: 16
     };
     
     var platformOptions2 = {
@@ -52,10 +103,10 @@ function create() {
     };
     
     var platformOptions3 = {
-    startingX: 300,
+    startingX: 320,
     startingY: 340,
-    width:180,
-    height: 16
+    width:160,
+    height: 15
     };
     
     var platformOptions4 = {
@@ -79,166 +130,89 @@ function create() {
     height: 16
     };
     
-var platformGO = toybox.add.platform(platformOptions);
-var platformGO = toybox.add.platform(platformOptions2);
-var platformGO = toybox.add.platform(platformOptions3);
-var platformGO = toybox.add.platform(platformOptions4);
-var platformGO = toybox.add.platform(platformOptions5);
-var platformGO = toybox.add.platform(platformOptions6);
+    [platformOptions,platformOptions2, platformOptions3, platformOptions4, platformOptions5, platformOptions6].forEach(po => toybox.add.platform(po))
 
-var spikesOptions = {
-startingX:400,
-startingY:640,
-scale:1
-};
+    var defaultspikeOptions = {
+        startingY: 640,
+        scale:1,
+        color: "pink"
+    }
 
-var spikesOptions2 = {
-startingX:380,
-startingY:640,
-scale:1
-};
+    for (i = 0; i < 18; i++) {
+        const spikesOptions = Object.assign({startingX:480 - 20*i}, defaultspikeOptions);
+        toybox.add.spikes(spikesOptions)
+        //text += "The number is " + i + "<br>";
+    }
 
-var spikesOptions3 = {
-startingX:360,
-startingY:640,
-scale:1
-};
+    var springOptions = {
+    startingX:200,
+    startingY:240,
+    immovable:true,
+    allowGravity:false
+    };
 
-var spikesOptions4 = {
-startingX:340,
-startingY:640,
-scale:1
-};
+    spring = toybox.add.spring(springOptions);
 
-var spikesOptions5 = {
-startingX:320,
-startingY:640,
-scale:1
-};
+    var springOptions2 = {
+    startingX:440,
+    startingY:240,
+    immovable:true,
+    allowGravity:false
+    };
 
-var spikesOptions6 = {
-startingX:300,
-startingY:640,
-scale:1
-};
-
-var spikesOptions7 = {
-startingX:280,
-startingY:640,
-scale:1
-};
-
-var spikesOptions8 = {
-startingX:260,
-startingY:640,
-scale:1
-};
-
-var spikesOptions9 = {
-startingX:240,
-startingY:640,
-scale:1
-};
-
-var spikesOptions10= {
-startingX:220,
-startingY:640,
-scale:1
-};
-
-var spikesOptions11= {
-startingX:420,
-startingY:640,
-scale:1
-};
-
-var spikesOptions12= {
-startingX:200,
-startingY:640,
-scale:1
-};
-
-var spikesOptions13= {
-startingX:200,
-startingY:640,
-scale:1
-};
-
-var spikesOptions14= {
-startingX:180,
-startingY:640,
-scale:1
-};
-
-var spikesOptions15= {
-startingX:160,
-startingY:640,
-scale:1
-};
-
-var spikesOptions16= {
-startingX:440,
-startingY:640,
-scale:1
-};
-
-var spikesOptions17= {
-startingX:460,
-startingY:640,
-scale:1
-};
-
-var spikesOptions18= {
-startingX:480,
-startingY:640,
-scale:1
-};
-
-var spikes = toybox.add.spikes(spikesOptions);
-var spikes = toybox.add.spikes(spikesOptions2);
-var spikes = toybox.add.spikes(spikesOptions3);
-var spikes = toybox.add.spikes(spikesOptions4);
-var spikes = toybox.add.spikes(spikesOptions5);
-var spikes = toybox.add.spikes(spikesOptions5);
-var spikes = toybox.add.spikes(spikesOptions6);
-var spikes = toybox.add.spikes(spikesOptions7);
-var spikes = toybox.add.spikes(spikesOptions8);
-var spikes = toybox.add.spikes(spikesOptions9);
-var spikes = toybox.add.spikes(spikesOptions10);
-var spikes = toybox.add.spikes(spikesOptions11);
-var spikes = toybox.add.spikes(spikesOptions12);
-var spikes = toybox.add.spikes(spikesOptions13);
-var spikes = toybox.add.spikes(spikesOptions14);
-var spikes = toybox.add.spikes(spikesOptions15);
-var spikes = toybox.add.spikes(spikesOptions16);
-var spikes = toybox.add.spikes(spikesOptions17);
-var spikes = toybox.add.spikes(spikesOptions18);
-
-var springOptions = {
-startingX:200,
-startingY:240,
-immovable:true,
-allowGravity:false
-};
-
-spring = toybox.add.spring(springOptions);
-
-var springOptions2 = {
-startingX:440,
-startingY:240,
-immovable:true,
-allowGravity:false
-};
-
-spring2 = toybox.add.spring(springOptions2);
-
+    spring2 = toybox.add.spring(springOptions2);
+    game.paused = false;
 }
+
+
 
 function update(){
     toybox.update();
     
     playerScore.setText("SCORE: "+ player1.score);
+    playerLives.setText("NUMBER OF LIVES: "+ player1.health);
+
+    if (player1.health === 0 && game.paused === false) {
+        playerGameover = toybox.add.text(9,200,"GAME OVER",{ font: "100px Arial", fill: "black"});
+        playerRestartwords = toybox.add.text(95,300,"Press D for directions or Enter to restart the game",{ font: "20px Arial", fill: "white" })
+        letterD = game.input.keyboard.addKey(68)
+        letterEnter = game.input.keyboard.addKey(13)
+        letterD.onDown.add(displaydirections, this);
+        letterEnter.onDown.add(restart, this);
+        game.time.events.add(3100, pauseGame,this);
+
+    }
 }
+
+function pauseGame () {
+    game.paused = true;
+}
+
+var playerGameover;
+var playerRestartwords;
+
+function displaydirections () {
+    playerRestartwords.destroy ()
+    playerGameover.destroy ()
+    cleanGameobjects ()
+    console.log ("hello")
+    displaydirectionstitletext = toybox.add.text(210,10,"DIRECTIONS",{ font: "40px Impact", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
+    displaydirectionstext = toybox.add.text(55,70,"Your goal is to kill as many of those slippery slimes as possible! In order to do so, jump on top of them using the up arrow. But be careful. You only have three lives. Remember that one life if lost everytime a slippery slime touches you. Press Enter to play, or press D to see the directions again. Good luck!",{ font: "15px Comic Sans", fill: "black", wordWrap: true, align: "center", wordWrapWidth: 500 })
+    game.input.keyboard.removeKey(68)
+}
+
+function restart () {
+    cleanGameobjects ()
+    createGameobjects ()
+}
+
+function cleanGameobjects () {
+    toybox.clear ()
+    preload ()
+    toybox.create();
+    createbackground ()
+}
+
 
 function createEnemies(){
     console.log("create enemies");
