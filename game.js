@@ -103,10 +103,10 @@ function createGameobjects () {
     };
     
     var platformOptions3 = {
-    startingX: 300,
+    startingX: 320,
     startingY: 340,
-    width:180,
-    height: 16
+    width:160,
+    height: 15
     };
     
     var platformOptions4 = {
